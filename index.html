@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Nnanna John's Digital Business Card</title>
+<meta name="description" content="Digital business card — modern, mobile-first, shareable vCard.">
+<style>
+  :root{
+    --grad-start:#7ec09f;
+    --grad-end:#527ac9;
+    --bg:#ffffff;
+    --text:#131D29;
+    --muted:#767C83;
+    --accent:#F9F9F9;
+    --max-width:900px;
+    --radius:16px;
+    --shadow: 0 6px 18px rgba(19,29,41,.08);
+    --glass: rgba(255,255,255,0.6);
+    --gap:16px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:var(--max-width);margin:24px auto;padding:20px;box-sizing:border-box;}
+  .card{
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    background:linear-gradient(135deg,var(--grad-start),var(--grad-end));
+    color:white;
+  }
+  .card-inner{display:flex;flex-direction:column;gap:var(--gap);}
+  .header{
+    padding:28px 20px 20px;
+    position:relative;
+  }
+  .svg-bg{position:absolute;inset:0;opacity:.12;pointer-events:none}
+  .profile-row{display:flex;align-items:center;gap:16px;z-index:2;position:relative;}
+  .avatar{
+    width:88px;height:88px;border-radius:50%;flex:0 0 88px;background:#fff;border:6px solid rgba(255,255,255,.15);box-shadow:0 8px 24px rgba(6,10,34,.2), inset 0 -6px 12px rgba(0,0,0,.06);overflow:hidden;
+  }
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .name-block{flex:1;min-width:0;}
+  h1{margin:0;font-size:20px;line-height:1.05;letter-spacing:0.2px}
+  p.title{margin:4px 0 0;color:rgba(255,255,255,.95);opacity:.95;font-size:13px}
+  .meta{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+  .chip{background:rgba(255,255,255,.12);padding:6px 10px;border-radius:999px;font-size:12px;display:inline-flex;align-items:center;gap:8px}
+  .actions{display:flex;gap:10px;padding:18px 20px 22px;flex-wrap:wrap;}
+  .btn{
+    background:white;color:var(--text);border:none;padding:10px 14px;border-radius:12px;font-weight:600;display:inline-flex;gap:10px;align-items:center;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.08);
+    transition:transform .12s ease,opacity .12s ease;
+  }
+  .btn:active{transform:translateY(1px) scale(.998)}
+  .btn.secondary{background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.06)}
+  .content{background:var(--bg);color:var(--text);padding:20px;border-top-left-radius:18px;border-top-right-radius:18px;transform:translateY(-8px);box-shadow:0 -10px 20px rgba(82,122,201,.06)}
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:720px){ .grid{grid-template-columns:1fr 1fr} .profile-row{gap:20px} }
+  .info-card{background:var(--accent);padding:14px;border-radius:12px;display:flex;flex-direction:column;gap:8px}
+  .label{font-size:12px;color:var(--muted)}
+  .value{font-size:15px;color:var(--text);word-break:break-word}
+  .social-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .social-btn{display:inline-flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:white;border:none;cursor:pointer}
+  .expand-toggle{background:none;border:0;color:var(--muted);cursor:pointer;padding:6px}
+  footer.card-foot{padding:12px 20px;background:transparent;color:rgba(255,255,255,.85);display:flex;justify-content:space-between;align-items:center}
+  .small{font-size:12px;color:rgba(255,255,255,.9)}
+  /* micro-interactions */
+  a.interactive{color:inherit;text-decoration:none}
+  a.interactive:hover{opacity:.9}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#0f1724;color:white;padding:10px 14px;border-radius:10px;box-shadow:0 8px 30px rgba(5,7,15,.4);display:none;z-index:9999}
+  .visible{display:block}
+  /* accessibility focus */
+  .btn:focus, .social-btn:focus, .expand-toggle:focus, a:focus{outline:3px solid rgba(82,122,201,.18);outline-offset:3px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <article class="card" aria-labelledby="card-title">
+      <div class="card-inner">
+        <header class="header" role="banner">
+          <!-- decorative SVG background -->
+          <svg class="svg-bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#000000" stop-opacity="0.08"/></linearGradient></defs>
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#g)"/>
+          </svg>
+
+          <div class="profile-row">
+            <figure class="avatar" role="img" aria-label="Profile photo">
+              <img id="profile-photo" src="https://images.unsplash.com/photo-1545996124-6cf1d13b9b43?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9c6f2df3726d0b2fa7c2b9f7d9a2a5d6" alt="Profile photo">
+            </figure>
+            <div class="name-block">
+              <h1 id="card-title">Nnanna John</h1>
+              <p class="title" id="card-role">Senior IT Consultant · Founder, RAD5 Tech Hub</p>
+
+              <div class="meta" aria-hidden="false">
+                <span class="chip" title="Location"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 11 7 11s7-5.8 7-11c0-3.9-3.1-7-7-7z" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><small id="card-location">Abia State, Nigeria</small></span>
+                <span class="chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><small>IT Executive</small></span>
+              </div>
+            </div>
+            <div style="min-width:80px;display:flex;align-items:center;justify-content:flex-end;">
+              <button class="btn" id="add-contact" aria-label="Add contact">Save Contact</button>
+            </div>
+          </div>
+
+          <div class="actions" aria-hidden="false">
+            <a id="call-btn" class="btn interactive" href="tel:+2348012345678" aria-label="Call +234 801 234 5678">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92V21a1 1 0 0 1-1.11 1 19 19 0 0 1-8.63-3.11 19 19 0 0 1-6-6A19 19 0 0 1 2 3.11 1 1 0 0 1 3 2h4.09a1 1 0 0 1 1 .75 12 12 0 0 0 .7 2.81 1 1 0 0 1-.24 1L7.3 8.7a16 16 0 0 0 6 6l1.14-1.14a1 1 0 0 1 1-.24 12 12 0 0 0 2.81.7 1 1 0 0 1 .75 1V21z" stroke="#0F1724" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Call</span>
+            </a>
+
+            <a id="email-work-btn" class="btn secondary interactive" href="mailto:nnanna.john@rad5hub.com?subject=Hello%20Nnanna" aria-label="Email nnanna.john@rad5hub.com">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 8.2v7.6A2.2 2.2 0 0 0 5.2 18h13.6A2.2 2.2 0 0 0 21 15.8V8.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 8.2l8.6 5.2a2 2 0 0 0 2.2 0L21 8.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Work Email</span>
+            </a>
+
+            <a id="show-map" class="btn interactive" href="#" aria-label="Show on map">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0 1 18 0z" stroke="#0F1724" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Show on Map</span>
+            </a>
+          </div>
+        </header>
+
+        <section class="content" role="region" aria-labelledby="about-heading">
+          <h2 id="about-heading" style="margin-top:0">About</h2>
+          <p style="margin:6px 0 14px;color:var(--muted)">Senior IT consultant specializing in software delivery, security, and cloud migrations. Founder at RAD5 Tech Hub — helping MSMEs embrace digital.</p>
+
+          <div class="grid" role="list">
+            <div class="info-card" role="listitem" aria-label="Contact methods">
+              <div>
+                <div class="label">Phone</div>
+                <div class="value"><a class="interactive" id="phone-text" href="tel:+2348012345678">+234 801 234 5678</a></div>
+              </div>
+              <div>
+                <div class="label">Emails</div>
+                <div class="value" style="display:flex;flex-direction:column;gap:6px">
+                  <a class="interactive" href="mailto:nnanna.john@rad5hub.com">nnanna.john@rad5hub.com</a>
+                  <a class="interactive" href="mailto:nnanna.personal@gmail.com">nnanna.personal@gmail.com</a>
+                </div>
+              </div>
+              <div>
+                <div class="label">Address</div>
+                <div class="value"><a id="address-link" class="interactive" href="#" >23 Innovation St, Umuahia, Abia</a></div>
+              </div>
+            </div>
+
+            <div class="info-card" role="listitem" aria-label="Social and links">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div class="label">Find me on</div>
+                  <div style="font-weight:600">LinkedIn · Portfolio</div>
+                </div>
+                <button class="expand-toggle" id="toggle-social" aria-expanded="false" aria-controls="social-panel">Show</button>
+              </div>
+
+              <div id="social-panel" style="display:none;margin-top:10px">
+                <div class="social-row">
+                  <a class="social-btn" id="linkedin" href="https://www.linkedin.com/in/nnanna-john" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v6h-4v-6a2 2 0 0 0-4 0v6h-4v-12h4v2.2" stroke="#0F1724" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <a class="social-btn" id="website" href="https://rad5hub.example.com" target="_blank" rel="noopener noreferrer" aria-label="Website">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#0F1724" stroke-width="1.2"/><path d="M2 12h20M12 2v20" stroke="#0F1724" stroke-width="1.2"/></svg>
+                  </a>
+                  <a class="social-btn" id="twitter" href="https://twitter.com/nnannajohn" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.43 1s-2 .95-3.62 1.2A4.48 4.48 0 0 0 12 5.5 12.8 12.8 0 0 1 3 4s-4 9 5 13a13 13 0 0 1-8 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" stroke="#0F1724" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn" href="https://scan.page/p/p4IeEt" target="_blank" rel="noopener" aria-label="View template sample">View Template</a>
+            <button id="download-vcard" class="btn secondary" aria-label="Download vCard">Download vCard</button>
+          </div>
+        </section>
+
+        <footer class="card-foot" role="contentinfo">
+          <div class="small">Made for professionals · RAD5 Tech Hub</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.9)">Share · Save · Connect</div>
+        </footer>
+      </div>
+    </article>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+/*
+  Single-file Digital Business Card (vCard) Template
+  - Replace the `CONTACT` object values to customize the card.
+  - Add/Remove fields as needed.
+  - "Save Contact" tries multiple approaches:
+    1) navigator.canShare && navigator.share with a File (best mobile UX)
+    2) navigator.contacts.save (experimental, currently not widely supported)
+    3) Direct .vcf download + open blob link
+  - Click handlers wired for call, mailto, map, social tracking.
+*/
+
+const CONTACT = {
+  firstName: "Nnanna",
+  lastName: "John",
+  role: "Senior IT Consultant",
+  company: "RAD5 Tech Hub",
+  phone: "+2348012345678",
+  emailWork: "nnanna.john@rad5hub.com",
+  emailPersonal: "nnanna.personal@gmail.com",
+  address: "23 Innovation St, Umuahia, Abia, Nigeria",
+  city: "Umuahia",
+  region: "Abia",
+  country: "Nigeria",
+  website: "https://rad5hub.example.com",
+  linkedin: "https://www.linkedin.com/in/nnanna-john",
+  twitter: "https://twitter.com/nnannajohn",
+  photo: document.getElementById('profile-photo').src
+};
+
+// --- Utility: create vCard text
+function generateVCard(contact){
+  const fn = `${contact.firstName} ${contact.lastName}`;
+  const uid = `${contact.firstName.toLowerCase()}.${contact.lastName.toLowerCase()}@${(contact.company||'').replace(/\s+/g,'').toLowerCase() || 'card'}`;
+  // escape commas/semicolons/newlines
+  const esc = s => (s||'').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+  let lines = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    `FN:${esc(fn)}`,
+    `N:${esc(contact.lastName)};${esc(contact.firstName)};;;`,
+    contact.role ? `TITLE:${esc(contact.role)}` : '',
+    contact.company ? `ORG:${esc(contact.company)}` : '',
+    contact.phone ? `TEL;TYPE=WORK,VOICE:${contact.phone}` : '',
+    contact.emailWork ? `EMAIL;TYPE=WORK:${contact.emailWork}` : '',
+    contact.emailPersonal ? `EMAIL;TYPE=HOME:${contact.emailPersonal}` : '',
+    contact.address ? `ADR;TYPE=WORK:;;${esc(contact.address)};${esc(contact.city)};${esc(contact.region)};;${esc(contact.country)}` : '',
+    contact.website ? `URL:${contact.website}` : '',
+    contact.linkedin ? `X-SOCIALPROFILE;type=linkedin:${contact.linkedin}` : '',
+    contact.twitter ? `X-SOCIALPROFILE;type=twitter:${contact.twitter}` : '',
+    `UID:${uid}`,
+    'END:VCARD'
+  ];
+  return lines.filter(Boolean).join("\\r\\n").replace(/\\r\\n/g, "\r\n");
+}
+
+// --- create File/Blob for vCard
+function makeVCardFile(contact){
+  const txt = generateVCard(contact);
+  const blob = new Blob([txt], {type: 'text/vcard;charset=utf-8'});
+  const filename = `${contact.firstName}_${contact.lastName}.vcf`.replace(/\s+/g,'_');
+  return new File([blob], filename, {type: 'text/vcard;charset=utf-8'});
+}
+
+// --- UI helpers
+const toast = document.getElementById('toast');
+function showToast(msg, time=3000){
+  toast.textContent = msg;
+  toast.classList.add('visible');
+  setTimeout(()=>{ toast.classList.remove('visible'); }, time);
+}
+
+// --- Wire up map link
+document.getElementById('show-map').addEventListener('click', (e)=>{
+  e.preventDefault();
+  const q = encodeURIComponent(CONTACT.address || `${CONTACT.city} ${CONTACT.region}`);
+  const url = `https://www.google.com/maps/search/?api=1&query=${q}`;
+  window.open(url, '_blank', 'noopener');
+});
+document.getElementById('address-link').setAttribute('href', `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.address)}`)
+document.getElementById('address-link').addEventListener('click', (e)=>{ e.preventDefault(); window.open(e.currentTarget.href,'_blank','noopener'); });
+
+// --- Social expand toggle
+const toggle = document.getElementById('toggle-social');
+const panel = document.getElementById('social-panel');
+toggle.addEventListener('click', ()=>{
+  const expanded = toggle.getAttribute('aria-expanded') === 'true';
+  toggle.setAttribute('aria-expanded', String(!expanded));
+  toggle.textContent = expanded ? 'Show' : 'Hide';
+  panel.style.display = expanded ? 'none' : 'block';
+});
+
+// --- Social click tracking (stub)
+['linkedin','website','twitter'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('click', (e)=>{
+    // Example: send tracking ping to analytics endpoint
+    console.log('SOCIAL_CLICK', id, el.href);
+    // If you integrate real analytics, send an event here.
+  });
+});
+
+// --- Fill dynamic fields (if you want to programmatically set)
+document.getElementById('card-title').textContent = `${CONTACT.firstName} ${CONTACT.lastName}`;
+document.getElementById('card-role').textContent = `${CONTACT.role} · ${CONTACT.company}`;
+document.getElementById('phone-text').href = `tel:${CONTACT.phone}`;
+document.getElementById('phone-text').textContent = CONTACT.phone;
+document.getElementById('call-btn').href = `tel:${CONTACT.phone}`;
+document.getElementById('email-work-btn').href = `mailto:${CONTACT.emailWork}?subject=${encodeURIComponent('Hello ' + CONTACT.firstName)}`;
+document.getElementById('profile-photo').src = CONTACT.photo;
+
+// --- Add Contact logic (best-effort)
+async function trySaveContact(){
+  const vcardFile = makeVCardFile(CONTACT);
+
+  // 1) Try experimental navigator.contacts.save (if exists) — currently unlikely / experimental
+  try {
+    if(navigator.contacts && typeof navigator.contacts.save === 'function'){
+      // this API is not standard; placeholder for future browsers
+      await navigator.contacts.save({name: `${CONTACT.firstName} ${CONTACT.lastName}`, tel: [CONTACT.phone], email: [CONTACT.emailWork]});
+      showToast('Contact saved via device API');
+      return;
+    }
+  } catch(err){
+    console.warn('navigator.contacts.save failed', err);
+  }
+
+  // 2) Try Web Share with files (best mobile UX)
+  try {
+    if(navigator.canShare && navigator.canShare({files: [vcardFile]})){
+      await navigator.share({
+        files: [vcardFile],
+        title: `${CONTACT.firstName} ${CONTACT.lastName}`,
+        text: `Contact: ${CONTACT.firstName} ${CONTACT.lastName} — ${CONTACT.role}`
+      });
+      showToast('vCard shared — choose "Save to Contacts" if available');
+      return;
+    }
+  } catch(err){
+    console.warn('navigator.share failed', err);
+  }
+
+  // 3) Fallback: download vCard and attempt to open blob URL (mobile usually prompts to import)
+  try {
+    const blob = new Blob([generateVCard(CONTACT)], {type:'text/vcard;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${CONTACT.firstName}_${CONTACT.lastName}.vcf`;
+    // auto-click to start download; on mobile, opening the vcf may prompt "Add to contacts"
+    a.click();
+    // some browsers block automatic download unless in user gesture, but this is triggered by click handler.
+    showToast('vCard downloaded — open it to add to your contacts');
+    // Try to open in same tab where possible (some mobile browsers open file in viewer)
+    setTimeout(()=> {
+      try{ window.location.href = url; } catch(e){ /* ignore */ }
+    }, 400);
+    // release URL after a while
+    setTimeout(()=>URL.revokeObjectURL(url), 30000);
+    return;
+  } catch(err){
+    console.error('vCard download fallback failed', err);
+    showToast('Unable to save contact on this device/browser. You can manually copy the details.');
+  }
+}
+
+// Save contact button
+document.getElementById('add-contact').addEventListener('click', async (e)=>{
+  e.currentTarget.disabled = true;
+  e.currentTarget.textContent = 'Saving...';
+  try {
+    await trySaveContact();
+  } finally {
+    e.currentTarget.disabled = false;
+    e.currentTarget.textContent = 'Save Contact';
+  }
+});
+
+// Also provide explicit Download vCard button
+document.getElementById('download-vcard').addEventListener('click', (e)=>{
+  const file = makeVCardFile(CONTACT);
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = file.name;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 30000);
+  showToast('vCard downloaded');
+});
+
+// Small progressive enhancement: add tel/mailto to other elements already in markup
+document.querySelectorAll('a.interactive').forEach(a=>{
+  a.addEventListener('click', ()=> {
+    // micro-feedback: you might attach analytics here
+    console.log('interactive clicked', a.href);
+  });
+});
+
+// Accessibility: keyboard support for social toggle
+toggle.addEventListener('keydown', (ev)=>{
+  if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); toggle.click(); }
+});
+
+</script>
+</body>
+</html>
